@@ -1,0 +1,19 @@
+.heading {
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.menu span {
+  padding-bottom: 0.3rem;
+  border-bottom: 0.1rem solid transparent;
+}
+.all {
+  color: rgb(5, 58, 251);
+  border-bottom-color: rgb(5, 58, 251) !important;
+}
+.menu span:hover {
+  cursor: pointer;
+  color: rgb(5, 58, 251);
+  border-bottom: 0.1rem solid rgb(5, 58, 251);
+}
+
