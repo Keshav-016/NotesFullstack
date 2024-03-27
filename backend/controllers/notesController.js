@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 
 export async function getAll(req, res, next) {
     try {
-        const data = await Notes.find({userId:req.userId});
+        const data = await Notes.find({ userId: req.userId });
         if (data.length === 0) {
             throw new Error('No data exists');
         }
@@ -34,7 +34,7 @@ export async function updateNote(req, res, next) {
         const noteId = req.params.id;
         const data = await Notes.findByIdAndUpdate(
             noteId,
-            { title: req.body.title },
+            { title: req.body.title, description: req.body.description },
             { returnOriginal: false }
         );
         return res.status(StatusCodes.OK).json({ data: data, message: 'Succesfully Updated' });
@@ -65,7 +65,7 @@ export async function addNote(req, res, next) {
 export async function deleteNote(req, res, next) {
     try {
         const noteId = req.params.id;
-        const data=await Notes.findByIdAndDelete(noteId);
+        const data = await Notes.findByIdAndDelete(noteId);
         return res.status(StatusCodes.OK).json({ data: data, message: 'Succesfully Deleted Above Data' });
     } catch (error) {
         next({ status: StatusCodes.NOT_FOUND, message: error.message });

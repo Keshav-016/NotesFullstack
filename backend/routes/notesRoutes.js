@@ -13,7 +13,7 @@ router.get('/get-note', getNote);
 
 router.get('/latest-notes', latestUpdatedNotes);
 
-router.put('/update-note:id', updateNote);
+router.put('/update-note/:id', updateNote);
 
 router.post('/add-note', addNote);
 

@@ -1,14 +1,14 @@
 import { HiPencil } from "react-icons/hi2";
 import { ImBin } from "react-icons/im";
 import axios from "axios";
-export default function Card({ title, description, updatedAt, _id ,setLoaded}) {
+export default function Card({ title, description, updatedAt, _id ,setLoaded, editNote}) {
     const newDate = new Date(updatedAt)
     async function deleteNote() {
         try {
             setLoaded(true);
             await axios.delete(`http://127.0.0.1:5000/notes/delete-note/${_id}`, {
                 headers: {
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWZiZTIxY2IwNjdiOTFmNTdhNmE0NjQiLCJpYXQiOjE3MTE1MzkxNjksImV4cCI6MTcxMTU2MzE2OX0.FMq4J6ILFhFv2SRPJnVQv_UavSftZx20LtELNSW_zCY"
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjA0NWE2NWIyNjQ3ODY5NTc1OWRkNmIiLCJpYXQiOjE3MTE1NjEzMzMsImV4cCI6MTcxMTU4NTMzM30.wD5Rl8Dc898wSS1AzycPrCYmxIqQNF7Ekul9NLxSGTA"
                 }
             })
             setLoaded(false);
@@ -23,7 +23,7 @@ export default function Card({ title, description, updatedAt, _id ,setLoaded}) {
                 <span className="bg-blue-500 py-1 px-4 rounded-3xl text-white hover:cursor-pointer">Note</span>
                 <div className="flex gap-5">
                     <input type="checkbox" className="mb-1 hover:cursor-pointer" />
-                    <HiPencil className="mt-1 cardButtons hover:cursor-pointer" />
+                    <HiPencil className="mt-1 cardButtons hover:cursor-pointer" onClick={() => editNote(_id, title, description)}/>
                     <ImBin className="mt-1 cardButtons hover:cursor-pointer" onClick={deleteNote} />
                 </div>
             </div>
