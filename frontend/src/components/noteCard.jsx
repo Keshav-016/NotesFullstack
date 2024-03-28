@@ -4,11 +4,13 @@ import axios from "axios";
 export default function Card({ title, description, updatedAt, _id ,setLoaded, editNote}) {
     const newDate = new Date(updatedAt)
     async function deleteNote() {
+        const storageData = JSON.parse(localStorage.getItem('data'));
+        const token = storageData.token;
         try {
             setLoaded(true);
             await axios.delete(`http://127.0.0.1:5000/notes/delete-note/${_id}`, {
                 headers: {
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjA0NWE2NWIyNjQ3ODY5NTc1OWRkNmIiLCJpYXQiOjE3MTE1NjEzMzMsImV4cCI6MTcxMTU4NTMzM30.wD5Rl8Dc898wSS1AzycPrCYmxIqQNF7Ekul9NLxSGTA"
+                    "Authorization": `Bearer ${token}`
                 }
             })
             setLoaded(false);

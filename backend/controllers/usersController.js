@@ -48,7 +48,7 @@ export async function loginUser(req, res , next) {
                 secretKey,
                 { expiresIn: '400m' }
             );
-            return res.status(StatusCodes.ACCEPTED).json({ data: accessToken , message: 'Succesfully Signed in' });
+            return res.status(StatusCodes.ACCEPTED).json({ data: {token:accessToken , name:userAuth.name} , message: 'Succesfully Signed in' });
         }
         
     } catch (error) {

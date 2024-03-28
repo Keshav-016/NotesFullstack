@@ -1,11 +1,10 @@
-import Navbar from './sections/navbar';
-import Body from './sections/body';
-import AddData from './components/addData';
+import Navbar from '../components/navbar';
+import Body from '../components/noteCollection';
+import AddData from '../components/addData';
 import { useState } from "react";
 
-import './App.css';
 
-function App() {
+export default function Home() {
   const [loaded, setloaded] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [cardEdit, setCardEdit] = useState({});
@@ -28,5 +27,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

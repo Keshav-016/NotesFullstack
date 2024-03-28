@@ -39,7 +39,7 @@ export async function updateNote(req, res, next) {
         );
         return res.status(StatusCodes.OK).json({ data: data, message: 'Succesfully Updated' });
     } catch (error) {
-        next({ status: StatusCodes.BAD_REQUEST, message: err.message });
+        next({ status: StatusCodes.BAD_REQUEST, message: error.message });
     }
 }
 

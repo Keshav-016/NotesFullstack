@@ -2,7 +2,7 @@ import Modal from 'react-modal';
 import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 const customStyles = {
     content: {
         top: '50%',
@@ -17,10 +17,18 @@ const customStyles = {
 Modal.setAppElement(document.getElementById('root'));
 
 export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit }) {
+    const navigate = useNavigate();
     const [newTitle, setNewTitle] = useState("");
     const [newDescription, setNewDescription] = useState("");
     const [editCheck , setEditCheck] = useState(false);
     async function addNote() {
+        const storageData = JSON.parse(localStorage.getItem('data'));
+        const token = storageData?.token;
+        if(!token){
+            alert("User not logged in")
+            navigate('/login');
+            return;
+        }
         try {
             setLoaded(true);
             if (!editCheck) {
@@ -31,7 +39,7 @@ export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit })
                     },
                     {
                         headers: {
-                            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjA0NWE2NWIyNjQ3ODY5NTc1OWRkNmIiLCJpYXQiOjE3MTE1NjEzMzMsImV4cCI6MTcxMTU4NTMzM30.wD5Rl8Dc898wSS1AzycPrCYmxIqQNF7Ekul9NLxSGTA"
+                            "Authorization": `Bearer ${token}`
                         },
                     },)
 
@@ -45,7 +53,7 @@ export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit })
                     },
                     {
                         headers: {
-                            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjA0NWE2NWIyNjQ3ODY5NTc1OWRkNmIiLCJpYXQiOjE3MTE1NjEzMzMsImV4cCI6MTcxMTU4NTMzM30.wD5Rl8Dc898wSS1AzycPrCYmxIqQNF7Ekul9NLxSGTA"
+                            "Authorization": `Bearer ${token}`
                         },
                     },)
 
@@ -62,10 +70,8 @@ export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit })
         setIsOpen(false);
     }
 
-
-
     useEffect(() => {
-        if (cardEdit) {
+        if (Object.keys(cardEdit).length!==0) {
             setNewTitle(cardEdit.title);
             setNewDescription(cardEdit.description);
             setEditCheck(true);
