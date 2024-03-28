@@ -1,7 +1,7 @@
 import { HiPencil } from "react-icons/hi2";
 import { ImBin } from "react-icons/im";
 import axios from "axios";
-export default function Card({ title, description, updatedAt, _id ,setLoaded, editNote}) {
+export default function Card({ title, description, updatedAt, _id ,setLoaded, editNote , selectMany}) {
     const newDate = new Date(updatedAt)
     async function deleteNote() {
         const storageData = JSON.parse(localStorage.getItem('data'));
@@ -24,7 +24,7 @@ export default function Card({ title, description, updatedAt, _id ,setLoaded, ed
             <div className="flex justify-between">
                 <span className="bg-blue-500 py-1 px-4 rounded-3xl text-white hover:cursor-pointer">Note</span>
                 <div className="flex gap-5">
-                    <input type="checkbox" className="mb-1 hover:cursor-pointer" />
+                    <input type="checkbox" className="mb-1 hover:cursor-pointer" onClick={()=>selectMany(_id)}/>
                     <HiPencil className="mt-1 cardButtons hover:cursor-pointer" onClick={() => editNote(_id, title, description)}/>
                     <ImBin className="mt-1 cardButtons hover:cursor-pointer" onClick={deleteNote} />
                 </div>

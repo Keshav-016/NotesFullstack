@@ -1,5 +1,5 @@
 import Card from './noteCard';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -8,6 +8,9 @@ export default function Body({ Loaded, setLoaded, editNote }) {
     const [dbData, setdbData] = useState(null);
     const [name , changeName] = useState("User");
     const [isUser , updateIsUser] = useState(false);
+    const [selectedMenu , updateSelected] = useState();
+    const [selectedCard , updateSelectedCard] = useState([]);
+    const allItem=useRef(null);
 
     async function getData() {
         const storageData = JSON.parse(localStorage.getItem('data'));
@@ -34,9 +37,26 @@ export default function Body({ Loaded, setLoaded, editNote }) {
         localStorage.removeItem('data');
         updateIsUser(false);
     }
+
+    function updateColor(e){
+        selectedMenu.style.color="black";
+        selectedMenu.style.borderColor="transparent";
+        updateSelected(e.target);
+        e.target.style.color="blue";
+        e.target.style.borderColor="blue";
+    }
+    function selectMany(item){
+        updateSelectedCard((prev)=>[item , ...prev]);
+        console.log(selectedCard);
+    }
+
     useEffect(() => {
         getData();
     }, [Loaded , isUser])
+
+    useEffect(()=>{
+        updateSelected(allItem.current);
+    },[allItem])
 
     return (
         <div className="max-w-[60rem] w-full mx-auto">
@@ -48,10 +68,10 @@ export default function Body({ Loaded, setLoaded, editNote }) {
             <div className="flex flex-wrap-reverse gap-5 justify-between mx-6">
                 <div>
                     <div className="flex gap-5 menu">
-                        <span className="all">ALL</span>
-                        <span>PENDING</span>
-                        <span>LATEST</span>
-                        <span>HIDDEN</span>
+                        <span ref={allItem} className="all" onClick={updateColor}>ALL</span>
+                        <span onClick={(e) => updateColor(e)}>PENDING</span>
+                        <span onClick={updateColor}>LATEST</span>
+                        <span onClick={updateColor}>HIDDEN</span>
                     </div>
                     <hr />
                 </div>
@@ -60,9 +80,9 @@ export default function Body({ Loaded, setLoaded, editNote }) {
                     <button type="button" className="bg-blue-500 text-white hover:bg-blue-700 py-1 px-3 rounded-3xl">HIDE</button>
                 </div>
             </div>
-            <div className="flex flex-wrap justify-start-w-[1000px]  mt-10 max-w-[60rem] w-full gap-5 mx-auto mx-6">
+            <div className="flex flex-wrap justify-center lg:justify-start   mt-10 max-w-[60rem] w-full gap-5 ">
                 {
-                    dbData?.data.map((item, index) => <Card {...item} key={index} setLoaded={setLoaded} editNote={editNote} />)
+                    dbData?.data.map((item, index) => <Card {...item} key={index} setLoaded={setLoaded} editNote={editNote} selectMany={selectMany}/>)
                 }
             </div>
         </div>
