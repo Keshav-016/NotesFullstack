@@ -1,26 +1,29 @@
 import Card from './noteCard';
 import { useState, useEffect, useRef } from "react";
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Body({ Loaded, setLoaded, editNote }) {
 
+    const navigate = useNavigate();
     const [dbData, setdbData] = useState(null);
-    const [name , changeName] = useState("User");
-    const [isUser , updateIsUser] = useState(false);
-    const [selectedMenu , updateSelected] = useState();
-    const [selectedCard , updateSelectedCard] = useState([]);
-    const allItem=useRef(null);
+    const [name, changeName] = useState("User");
+    const [isUser, updateIsUser] = useState(false);
+    const [selectedMenu, updateSelected] = useState();
+    const [selectedCard, updateSelectedCard] = useState([]);
+    const [url , updateUrl] = useState('http://localhost:5000/notes')
+    const [isChange, updateisChange] = useState(false);
+    const allItem = useRef(null);
 
     async function getData() {
         const storageData = JSON.parse(localStorage.getItem('data'));
         const token = storageData?.token;
-        if(token){
+        if (token) {
             updateIsUser(true);
         }
-        storageData?.name?changeName(storageData?.name.toUpperCase()):changeName("USER");
+        storageData?.name ? changeName(storageData?.name.toUpperCase()) : changeName("USER");
         try {
-            const response = await axios.get('http://localhost:5000/notes', {
+            const response = await axios.get(url, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
@@ -32,31 +35,100 @@ export default function Body({ Loaded, setLoaded, editNote }) {
             setdbData(null)
         }
     }
+    async function deleteMany() {
+        const storageData = JSON.parse(localStorage.getItem('data'));
+        const token = storageData?.token;
+        if (token) {
+            updateIsUser(true);
+        }
+        else {
+            alert("Login first!!!");
+            navigate('/login');
+        }
+        try {
+            await axios.delete('http://localhost:5000/notes/delete-many',
+                {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    },
+                    data: {
+                        itemIds: selectedCard
+                    }
+                },)
+            updateisChange(true);
+        }
+        catch (error) {
+            console.log(error.message)
+            setdbData(null)
+        }
+    }
 
-    function logout(){
+    async function hideNote() {
+        const storageData = JSON.parse(localStorage.getItem('data'));
+        const token = storageData?.token;
+        if (token) {
+            updateIsUser(true);
+        }
+        else {
+            alert("Login first!!!");
+            navigate('/login');
+        }
+        try {
+            await axios.post('http://localhost:5000/notes/change-visiblity',
+                {
+                    itemIds: selectedCard
+                },
+                {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    },
+                },)
+                updateisChange(true);
+        }
+        catch (error) {
+            console.log(error.message)
+            setdbData(null)
+        }
+    }
+
+    function logout() {
         localStorage.removeItem('data');
         updateIsUser(false);
     }
 
-    function updateColor(e){
-        selectedMenu.style.color="black";
-        selectedMenu.style.borderColor="transparent";
+    function changeUrl(e) {
+        selectedMenu.style.color = "black";
+        selectedMenu.style.borderColor = "transparent";
         updateSelected(e.target);
-        e.target.style.color="blue";
-        e.target.style.borderColor="blue";
+        e.target.style.color = "blue";
+        e.target.style.borderColor = "blue";
+        if(e.target.innerText==="ALL")
+        {
+            updateUrl("http://localhost:5000/notes");
+        }
+        else if(e.target.innerText === "LATEST"){
+            updateUrl("http://localhost:5000/notes/latest-notes");
+        }
+        else if(e.target.innerText==="HIDDEN"){
+            updateUrl("http://localhost:5000/notes/show-hidden");
+        }
+        else{
+            updateUrl("http://localhost:5000/notes/show-visible");
+        }
     }
-    function selectMany(item){
-        updateSelectedCard((prev)=>[item , ...prev]);
-        console.log(selectedCard);
+    function selectMany(item) {
+        updateSelectedCard((prev) => [item, ...prev]);
     }
+
 
     useEffect(() => {
         getData();
-    }, [Loaded , isUser])
+        updateisChange(false);
+    }, [Loaded, isUser, isChange , url ])
 
-    useEffect(()=>{
+    useEffect(() => {
         updateSelected(allItem.current);
-    },[allItem])
+    }, [allItem])
 
     return (
         <div className="max-w-[60rem] w-full mx-auto">
@@ -68,21 +140,21 @@ export default function Body({ Loaded, setLoaded, editNote }) {
             <div className="flex flex-wrap-reverse gap-5 justify-between mx-6">
                 <div>
                     <div className="flex gap-5 menu">
-                        <span ref={allItem} className="all" onClick={updateColor}>ALL</span>
-                        <span onClick={(e) => updateColor(e)}>PENDING</span>
-                        <span onClick={updateColor}>LATEST</span>
-                        <span onClick={updateColor}>HIDDEN</span>
+                        <span ref={allItem} className="all" onClick={changeUrl}>ALL</span>
+                        <span onClick={changeUrl}>VISIBLE</span>
+                        <span onClick={changeUrl}>LATEST</span>
+                        <span onClick={changeUrl}>HIDDEN</span>
                     </div>
                     <hr />
                 </div>
                 <div className="flex gap-3">
-                    <button type="button" className="bg-red-500 text-white hover:bg-red-700 py-1 px-3 rounded-3xl">DELETE</button>
-                    <button type="button" className="bg-blue-500 text-white hover:bg-blue-700 py-1 px-3 rounded-3xl">HIDE</button>
+                    <button type="button" className="bg-red-500 text-white hover:bg-red-700 py-1 px-3 rounded-3xl" onClick={deleteMany}>DELETE</button>
+                    <button type="button" className="bg-blue-500 text-white hover:bg-blue-700 py-1 px-3 rounded-3xl" onClick={hideNote}>HIDE</button>
                 </div>
             </div>
             <div className="flex flex-wrap justify-center lg:justify-start   mt-10 max-w-[60rem] w-full gap-5 ">
                 {
-                    dbData?.data.map((item, index) => <Card {...item} key={index} setLoaded={setLoaded} editNote={editNote} selectMany={selectMany}/>)
+                    dbData?.data.map((item, index) => <Card {...item} key={index} setLoaded={setLoaded} editNote={editNote} selectMany={selectMany} />)
                 }
             </div>
         </div>

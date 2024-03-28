@@ -1,4 +1,4 @@
-import {getAll , getNote , updateNote , deleteNote , addNote , latestUpdatedNotes , changeVisiblity , deleteMany , wrongUrl} from '../controllers/notesController.js';
+import {getAll , getNote , updateNote , deleteNote , addNote , latestUpdatedNotes , changeVisiblity , deleteMany , wrongUrl, showHidden , showVisible} from '../controllers/notesController.js';
 import { Router } from 'express';
 import validateToken from '../middleware/tokenhandler.js';
 
@@ -12,6 +12,10 @@ router.get('/', getAll);
 router.get('/get-note', getNote);
 
 router.get('/latest-notes', latestUpdatedNotes);
+
+router.get('/show-hidden', showHidden);
+
+router.get('/show-visible', showVisible);
 
 router.put('/update-note/:id', updateNote);
 

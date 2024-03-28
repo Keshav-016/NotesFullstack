@@ -84,6 +84,30 @@ export async function latestUpdatedNotes(req, res, next) {
     }
 }
 
+export async function showHidden(req, res, next) {
+    try {
+        const data = await Notes.find({ userId: req.userId , isVisible:false});
+        if (!data) {
+            throw new Error("No data to display");
+        }
+        return res.status(StatusCodes.OK).json({ data: data, message: "Hidden notes received" });
+    } catch (error) {
+        next({ status: StatusCodes.INTERNAL_SERVER_ERROR, message: error.message });
+    }
+}
+
+export async function showVisible(req, res, next) {
+    try {
+        const data = await Notes.find({ userId: req.userId , isVisible:true});
+        if (!data) {
+            throw new Error("No data to display");
+        }
+        return res.status(StatusCodes.OK).json({ data: data, message: "Visible notes received" });
+    } catch (error) {
+        next({ status: StatusCodes.INTERNAL_SERVER_ERROR, message: error.message });
+    }
+}
+
 export async function changeVisiblity(req, res, next) {
     try {
         const data = await Notes.updateMany({ _id: { $in: req.body.itemIds } }, { isVisible: false });
