@@ -20,9 +20,6 @@ export async function getNote(req, res, next) {
             title: { $regex: notesTitle },
             userId: req.userId,
         });
-        if (noteData.length === 0) {
-            throw new Error("Resource was not found");
-        }
         return res.status(StatusCodes.OK).json({ data: noteData, message: "Successfully got the resource" });
     } catch (error) {
         next({ status: StatusCodes.NOT_FOUND, message: error.message });

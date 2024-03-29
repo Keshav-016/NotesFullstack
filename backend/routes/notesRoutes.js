@@ -9,7 +9,7 @@ router.use(validateToken);
 
 router.get('/', getAll);
 
-router.get('/get-note', getNote);
+router.get('/get-note/', getNote);
 
 router.get('/latest-notes', latestUpdatedNotes);
 

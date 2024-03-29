@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 
-export default function Body({ Loaded, setLoaded, editNote }) {
+export default function Body({ Loaded, setLoaded, editNote , searchedNote}) {
 
     const navigate = useNavigate();
     const [dbData, setdbData] = useState(null);
@@ -11,7 +11,7 @@ export default function Body({ Loaded, setLoaded, editNote }) {
     const [isUser, updateIsUser] = useState(false);
     const [selectedMenu, updateSelected] = useState();
     const [selectedCard, updateSelectedCard] = useState([]);
-    const [url , updateUrl] = useState('http://localhost:5000/notes')
+    const [url , updateUrl] = useState('http://localhost:5000/notes');
     const [isChange, updateisChange] = useState(false);
     const allItem = useRef(null);
 
@@ -116,10 +116,10 @@ export default function Body({ Loaded, setLoaded, editNote }) {
             updateUrl("http://localhost:5000/notes/show-visible");
         }
     }
+
     function selectMany(item) {
         updateSelectedCard((prev) => [item, ...prev]);
     }
-
 
     useEffect(() => {
         getData();
@@ -129,6 +129,10 @@ export default function Body({ Loaded, setLoaded, editNote }) {
     useEffect(() => {
         updateSelected(allItem.current);
     }, [allItem])
+
+    useEffect(()=>{
+        updateUrl(`http://localhost:5000/notes/get-note/?title=${searchedNote}`);
+    },[searchedNote])
 
     return (
         <div className="max-w-[60rem] w-full mx-auto">
@@ -154,7 +158,7 @@ export default function Body({ Loaded, setLoaded, editNote }) {
             </div>
             <div className="flex flex-wrap justify-center lg:justify-start   mt-10 max-w-[60rem] w-full gap-5 ">
                 {
-                    dbData?.data.map((item, index) => <Card {...item} key={index} setLoaded={setLoaded} editNote={editNote} selectMany={selectMany} />)
+                    dbData?.data.map((item, index) => <Card {...item} key={`${item.title}-index`} setLoaded={setLoaded} editNote={editNote} selectMany={selectMany} />)
                 }
             </div>
         </div>

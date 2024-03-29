@@ -2,7 +2,8 @@ import { HiPencil } from "react-icons/hi2";
 import { ImBin } from "react-icons/im";
 import axios from "axios";
 export default function Card({ title, description, updatedAt, _id ,setLoaded, editNote , selectMany}) {
-    const newDate = new Date(updatedAt)
+    const updatedDate = updatedAt.substring(0, 10);
+    const updatedTime = updatedAt.substring(11, 19);
     async function deleteNote() {
         const storageData = JSON.parse(localStorage.getItem('data'));
         const token = storageData.token;
@@ -32,7 +33,7 @@ export default function Card({ title, description, updatedAt, _id ,setLoaded, ed
             <div className="w-full ms-1">
                 <h3 className="my-3 font-bold">{title}</h3>
                 <p>{description}</p>
-                <span className="block w-fit ms-auto mt-12">{`${newDate.getDate()}-${newDate.getMonth()}-${newDate.getFullYear()}`}</span>
+                <span className="block w-fit ms-auto mt-12 text-gray-400 italic font-light">{`${updatedDate}  ${updatedTime}-IST`}</span>
             </div>
         </div>
     )
