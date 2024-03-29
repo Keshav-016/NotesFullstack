@@ -31,8 +31,8 @@ export default function Card({ title, description, updatedAt, _id ,setLoaded, ed
                 </div>
             </div>
             <div className="w-full ms-1">
-                <h3 className="my-3 font-bold">{title}</h3>
-                <p>{description}</p>
+                <h3 className="my-3 font-bold overflow-x-auto no-scrollbar">{title}</h3>
+                <p className="overflow-x-auto no-scrollbar">{description}</p>
                 <span className="block w-fit ms-auto mt-12 text-gray-400 italic font-light">{`${updatedDate}  ${updatedTime}-IST`}</span>
             </div>
         </div>

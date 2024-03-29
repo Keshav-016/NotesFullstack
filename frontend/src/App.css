@@ -7,7 +7,7 @@
   padding-bottom: 0.3rem;
   border-bottom: 0.1rem solid transparent;
 }
-.all {
+.visible {
   color: rgb(5, 58, 251);
   border-bottom-color: rgb(5, 58, 251);
 }
