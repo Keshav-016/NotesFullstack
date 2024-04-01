@@ -151,7 +151,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
         else{
             updateUrl('http://localhost:5000/notes/show-visible');
         }
-    }, [searchedNote])
+    }, [searchedNote]);
 
     useEffect(() => {
         getData();
