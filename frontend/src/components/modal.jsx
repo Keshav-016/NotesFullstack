@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SweetAlert, SweetAlertError } from './sweetAlert';
 const customStyles = {
     content: {
         top: '50%',
@@ -20,12 +21,12 @@ export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit })
     const navigate = useNavigate();
     const [newTitle, setNewTitle] = useState("");
     const [newDescription, setNewDescription] = useState("");
-    const [editCheck , setEditCheck] = useState(false);
+    const [editCheck, setEditCheck] = useState(false);
     async function addNote() {
         const storageData = JSON.parse(localStorage.getItem('data'));
         const token = storageData?.token;
-        if(!token){
-            alert("User not logged in")
+        if (!token) {
+            alert("User not logged in");
             navigate('/login');
             return;
         }
@@ -42,7 +43,7 @@ export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit })
                             "Authorization": `Bearer ${token}`
                         },
                     },)
-
+                SweetAlert("successfully added the note")
                 setLoaded(false);
             }
             else {
@@ -56,13 +57,15 @@ export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit })
                             "Authorization": `Bearer ${token}`
                         },
                     },)
+                SweetAlert("successfully updated the note");
 
                 setLoaded(false);
                 setEditCheck(false);
             }
         }
         catch (error) {
-            console.log(error.message);
+            const message = error.response.data.message
+            SweetAlertError(message);
         }
     }
 
@@ -71,7 +74,7 @@ export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit })
     }
 
     useEffect(() => {
-        if (Object.keys(cardEdit).length!==0) {
+        if (Object.keys(cardEdit).length !== 0) {
             setNewTitle(cardEdit.title);
             setNewDescription(cardEdit.description);
             setEditCheck(true);
@@ -83,17 +86,20 @@ export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit })
         addNote();
         setNewTitle("");
         setNewDescription("");
-        closeModal();
+        if (newTitle && newDescription) {
+            closeModal();
+        }
     }
 
     return (
-        <div>
+        <div className='relative'>
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 style={customStyles}
             >
-                <form className='flex flex-col gap-5 w-[20rem]'>
+                <button className='bg-red-500 hover:bg-red-700 text-white rounded pb-1 w-6 h-6 flex items-center justify-center absolute right-1 top-1 ' onClick={closeModal}> x </button>
+                <form className='flex flex-col gap-5 w-[17rem] sm:w-[20rem]'>
                     <h2 className=' text-xl text-center font-bold mb-5'>Enter the Note</h2>
                     <input onChange={(e) => setNewTitle(e.target.value)} value={newTitle || ""} type='text' placeholder='Title' className="border py-2 ps-4 rounded-lg outline-none" />
                     <textarea onChange={(e) => setNewDescription(e.target.value)} value={newDescription || ""} rows={5} placeholder='Description' className="border py-2 ps-4 rounded-lg outline-none" />

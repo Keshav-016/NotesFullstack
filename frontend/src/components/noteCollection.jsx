@@ -2,6 +2,7 @@ import Card from './noteCard';
 import { useState, useEffect, useRef } from "react";
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import { SweetAlert, SweetAlertError } from './sweetAlert';
 
 export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
 
@@ -31,14 +32,20 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
             return setdbData(response.data);
         }
         catch (error) {
-            console.log(error.message)
+            const message = error.response.data.message
+            console.log(message);
             setdbData(null)
         }
     }
+    
     async function deleteMany() {
         const storageData = JSON.parse(localStorage.getItem('data'));
         const token = storageData?.token;
-        if (token) {
+        if (selectedCard.length === 0) {
+            SweetAlertError("No items selected")
+            return;
+        }
+        else if (token) {
             updateIsUser(true);
         }
         else {
@@ -55,11 +62,13 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
                         itemIds: selectedCard
                     }
                 },)
+            SweetAlert("Successfully deleted many notes")
             updateSelectedCard([]);
             updateisChange(true);
         }
         catch (error) {
-            console.log(error.message)
+            const message = error.response.data.message
+            SweetAlertError(message);
             setdbData(null)
         }
     }
@@ -67,7 +76,11 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
     async function hideNote() {
         const storageData = JSON.parse(localStorage.getItem('data'));
         const token = storageData?.token;
-        if (token) {
+        if (selectedCard.length === 0) {
+            SweetAlertError("No items selected")
+            return;
+        }
+        else if (token) {
             updateIsUser(true);
         }
         else {
@@ -88,7 +101,8 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
             updateisChange(true);
         }
         catch (error) {
-            console.log(error.message)
+            const message = error.response.data.message
+            SweetAlertError(message);
             setdbData(null)
         }
     }
@@ -96,6 +110,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
     function logout() {
         localStorage.removeItem('data');
         updateIsUser(false);
+        SweetAlert("Successfully loggedOut")
     }
 
     function changeUrl(e) {
@@ -130,8 +145,11 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
     }, [allItem])
 
     useEffect(() => {
-        if (searchedNote) {
+        if (searchedNote!=="") {
             updateUrl(`http://localhost:5000/notes/get-note/?title=${searchedNote}`);
+        }
+        else{
+            updateUrl('http://localhost:5000/notes/show-visible');
         }
     }, [searchedNote])
 
@@ -164,7 +182,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
             </div>
             <div className="flex flex-wrap justify-center lg:justify-start   mt-10 max-w-[60rem] w-full gap-5 ">
                 {
-                    dbData?.data.map((item, index) => <Card {...item} key={`${item.title}-index`} setLoaded={setLoaded} editNote={editNote} selectMany={selectMany} uncheckCard={uncheckCard} updateisChange={updateisChange} />)
+                    dbData?.data?.length > 0 ? dbData.data.map((item, index) => <Card {...item} key={`${item.title}-index`} setLoaded={setLoaded} editNote={editNote} selectMany={selectMany} uncheckCard={uncheckCard} updateisChange={updateisChange} />) : <h2 className='md:ms-6'>NOTHING TO SHOW</h2>
                 }
             </div>
         </div>

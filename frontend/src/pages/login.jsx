@@ -1,6 +1,7 @@
 import { useRef} from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import {SweetAlertError} from '../components/sweetAlert'
 export default function Login() {
     const navigator=useNavigate();
     const getEmail = useRef();
@@ -18,7 +19,8 @@ export default function Login() {
             navigator('/');
         }
         catch(error){
-            alert(error);
+            const message = error.response.data.message
+            SweetAlertError(message);
         }
     }
     return (

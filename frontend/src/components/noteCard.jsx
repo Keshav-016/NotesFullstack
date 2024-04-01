@@ -1,9 +1,11 @@
 import { HiPencil } from "react-icons/hi2";
 import { ImBin } from "react-icons/im";
+import {SweetAlert , SweetAlertError}  from "./sweetAlert";
 import axios from "axios";
 export default function Card({ title, description, updatedAt, _id , isVisible ,setLoaded, editNote , selectMany , uncheckCard , updateisChange}) {
     const updatedDate = updatedAt.substring(0, 10);
     const updatedTime = updatedAt.substring(11, 19);
+
     async function deleteNote() {
         const storageData = JSON.parse(localStorage.getItem('data'));
         const token = storageData.token;
@@ -14,10 +16,12 @@ export default function Card({ title, description, updatedAt, _id , isVisible ,s
                     "Authorization": `Bearer ${token}`
                 }
             })
+            SweetAlert(`Successfully deleted note with title : ${title}`)
             updateisChange(false);
         }
         catch(error){
-            console.log(error.message);
+            const message = error.response.data.message
+            SweetAlertError(message);
         }
     }
 
@@ -36,7 +40,8 @@ export default function Card({ title, description, updatedAt, _id , isVisible ,s
             setLoaded(false);
         }
         catch (error) {
-            console.log(error.message)
+            const message = error.response.data.message
+            SweetAlertError(message);
         }
     }
 
