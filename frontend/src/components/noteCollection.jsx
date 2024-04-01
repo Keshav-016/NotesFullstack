@@ -21,7 +21,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
         if (token) {
             updateIsUser(true);
         }
-        storageData?.name ? changeName(storageData?.name.toUpperCase()) : changeName("USER");
+        storageData?.name ? changeName(storageData?.name.split(' ')[0].toUpperCase()) : changeName("USER");
         try {
             const response = await axios.get(url, {
                 headers: {
@@ -55,6 +55,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
                         itemIds: selectedCard
                     }
                 },)
+            updateSelectedCard([]);
             updateisChange(true);
         }
         catch (error) {
@@ -74,7 +75,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
             navigate('/login');
         }
         try {
-            await axios.post('http://localhost:5000/notes/change-visiblity',
+            await axios.post('http://localhost:5000/notes/hideNote',
                 {
                     itemIds: selectedCard
                 },
@@ -83,6 +84,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
                         "Authorization": `Bearer ${token}`
                     },
                 },)
+            updateSelectedCard([]);
             updateisChange(true);
         }
         catch (error) {
@@ -118,6 +120,9 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
 
     function selectMany(item) {
         updateSelectedCard((prev) => [item, ...prev]);
+    }
+    function uncheckCard(item) {
+        updateSelectedCard(() => selectedCard.filter((element) => element !== item))
     }
 
     useEffect(() => {
@@ -159,7 +164,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
             </div>
             <div className="flex flex-wrap justify-center lg:justify-start   mt-10 max-w-[60rem] w-full gap-5 ">
                 {
-                    dbData?.data.map((item, index) => <Card {...item} key={`${item.title}-index`} setLoaded={setLoaded} editNote={editNote} selectMany={selectMany} />)
+                    dbData?.data.map((item, index) => <Card {...item} key={`${item.title}-index`} setLoaded={setLoaded} editNote={editNote} selectMany={selectMany} uncheckCard={uncheckCard} updateisChange={updateisChange} />)
                 }
             </div>
         </div>

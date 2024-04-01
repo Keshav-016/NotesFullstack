@@ -29,7 +29,7 @@ export async function getNote(req, res, next) {
 export async function updateNote(req, res, next) {
     try {
         const noteId = req.params.id;
-        if(Notes.find({title:req.body.title})){
+        if (Notes.find({ title: req.body.title })) {
             throw new Error("Note with same title already exists")
         }
         const data = await Notes.findByIdAndUpdate(
@@ -74,7 +74,7 @@ export async function deleteNote(req, res, next) {
 
 export async function latestUpdatedNotes(req, res, next) {
     try {
-        const data = await Notes.find({ userId: req.userId }).sort({ updatedAt: -1 }).limit(3);
+        const data = await Notes.find({ userId: req.userId, isVisible: true }).sort({ updatedAt: -1 }).limit(3);
         if (!data) {
             throw new Error("No data to display");
         }
@@ -86,7 +86,7 @@ export async function latestUpdatedNotes(req, res, next) {
 
 export async function showHidden(req, res, next) {
     try {
-        const data = await Notes.find({ userId: req.userId , isVisible:false});
+        const data = await Notes.find({ userId: req.userId, isVisible: false });
         if (!data) {
             throw new Error("No data to display");
         }
@@ -98,7 +98,7 @@ export async function showHidden(req, res, next) {
 
 export async function showVisible(req, res, next) {
     try {
-        const data = await Notes.find({ userId: req.userId , isVisible:true});
+        const data = await Notes.find({ userId: req.userId, isVisible: true });
         if (!data) {
             throw new Error("No data to display");
         }
@@ -108,9 +108,19 @@ export async function showVisible(req, res, next) {
     }
 }
 
-export async function changeVisiblity(req, res, next) {
+export async function hideNote(req, res, next) {
     try {
         const data = await Notes.updateMany({ _id: { $in: req.body.itemIds } }, { isVisible: false });
+        return res.status(StatusCodes.OK).json({ data: data, message: 'Updated' });
+    } catch (error) {
+        next({ status: StatusCodes.INTERNAL_SERVER_ERROR, message: error.message });
+    }
+}
+
+export async function toggleVisiblity(req, res, next) {
+    try {
+        const dbData = await Notes.findOne({_id:req.query.id})
+        const data = await Notes.updateOne({ _id: req.query.id }, { isVisible: dbData.isVisible ? false : true });
         return res.status(StatusCodes.OK).json({ data: data, message: 'Updated' });
     } catch (error) {
         next({ status: StatusCodes.INTERNAL_SERVER_ERROR, message: error.message });
