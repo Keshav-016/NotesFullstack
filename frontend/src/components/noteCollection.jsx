@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { SweetAlert, SweetAlertError } from './sweetAlert';
 
 export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
+    const baseUrl = 'http://localhost:5000/notes/'
 
     const navigate = useNavigate();
     const [dbData, setdbData] = useState(null);
@@ -12,7 +13,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
     const [isUser, updateIsUser] = useState(false);
     const [selectedMenu, updateSelected] = useState();
     const [selectedCard, updateSelectedCard] = useState([]);
-    const [url, updateUrl] = useState('http://localhost:5000/notes/show-visible');
+    const [url, updateUrl] = useState(`${baseUrl}`);
     const [isChange, updateisChange] = useState(false);
     const allItem = useRef(null);
 
@@ -53,7 +54,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
             navigate('/login');
         }
         try {
-            await axios.delete('http://localhost:5000/notes/delete-many',
+            await axios.delete(`${baseUrl}delete-many`,
                 {
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -88,7 +89,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
             navigate('/login');
         }
         try {
-            await axios.post('http://localhost:5000/notes/hideNote',
+            await axios.post(`${baseUrl}hideNote`,
                 {
                     itemIds: selectedCard
                 },
@@ -120,16 +121,16 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
         e.target.style.color = "blue";
         e.target.style.borderColor = "blue";
         if (e.target.innerText === "ALL") {
-            updateUrl("http://localhost:5000/notes");
+            updateUrl(baseUrl);
         }
         else if (e.target.innerText === "LATEST") {
-            updateUrl("http://localhost:5000/notes/latest-notes");
+            updateUrl(`${baseUrl}latest-notes`);
         }
         else if (e.target.innerText === "HIDDEN") {
-            updateUrl("http://localhost:5000/notes/show-hidden");
+            updateUrl(`${baseUrl}show-hidden`);
         }
         else {
-            updateUrl("http://localhost:5000/notes/show-visible");
+            updateUrl(`${baseUrl}show-visible`);
         }
     }
 
@@ -145,11 +146,11 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
     }, [allItem])
 
     useEffect(() => {
-        if (searchedNote!=="") {
-            updateUrl(`http://localhost:5000/notes/get-note/?title=${searchedNote}`);
+        if (searchedNote) {
+            updateUrl(`${baseUrl}get-note/?title=${searchedNote}`);
         }
         else{
-            updateUrl('http://localhost:5000/notes/show-visible');
+            updateUrl(`${baseUrl}`);
         }
     }, [searchedNote]);
 
@@ -168,8 +169,8 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
             <div className="flex flex-wrap-reverse gap-5 justify-between mx-6">
                 <div>
                     <div className="flex gap-5 menu">
-                        <span onClick={changeUrl}>ALL</span>
-                        <span ref={allItem} onClick={changeUrl} className="visible">VISIBLE</span>
+                        <span ref={allItem} onClick={changeUrl} className="visible">ALL</span>
+                        <span onClick={changeUrl}>VISIBLE</span>
                         <span onClick={changeUrl}>LATEST</span>
                         <span onClick={changeUrl}>HIDDEN</span>
                     </div>

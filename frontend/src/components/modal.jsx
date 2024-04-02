@@ -26,7 +26,7 @@ export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit })
         const storageData = JSON.parse(localStorage.getItem('data'));
         const token = storageData?.token;
         if (!token) {
-            alert("User not logged in");
+            SweetAlertError("User not logged in");
             navigate('/login');
             return;
         }
