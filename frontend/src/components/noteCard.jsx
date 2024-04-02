@@ -5,13 +5,13 @@ import axios from "axios";
 export default function Card({ title, description, updatedAt, _id , isVisible ,setLoaded, editNote , selectMany , uncheckCard , updateisChange}) {
     const updatedDate = updatedAt.substring(0, 10);
     const updatedTime = updatedAt.substring(11, 19);
-
+    const baseUrl = 'https://notesfullstack-7wtx.onrender.com/'
     async function deleteNote() {
         const storageData = JSON.parse(localStorage.getItem('data'));
         const token = storageData.token;
         try {
             updateisChange(true);
-            await axios.delete(`http://127.0.0.1:5000/notes/delete-note/${_id}`, {
+            await axios.delete(`${baseUrl}notes/delete-note/${_id}`, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
@@ -31,7 +31,7 @@ export default function Card({ title, description, updatedAt, _id , isVisible ,s
 
         try {
             setLoaded(true);
-            await axios.get(`http://localhost:5000/notes/toggle-visiblity/?id=${_id}`,
+            await axios.get(`${baseUrl}notes/toggle-visiblity/?id=${_id}`,
                 {
                     headers: {
                         "Authorization": `Bearer ${token}`

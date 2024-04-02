@@ -22,6 +22,7 @@ export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit })
     const [newTitle, setNewTitle] = useState("");
     const [newDescription, setNewDescription] = useState("");
     const [editCheck, setEditCheck] = useState(false);
+    const baseUrl = 'https://notesfullstack-7wtx.onrender.com/'
     async function addNote() {
         const storageData = JSON.parse(localStorage.getItem('data'));
         const token = storageData?.token;
@@ -33,7 +34,7 @@ export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit })
         try {
             setLoaded(true);
             if (!editCheck) {
-                await axios.post("http://127.0.0.1:5000/notes/add-note",
+                await axios.post(`${baseUrl}notes/add-note`,
                     {
                         title: newTitle,
                         description: newDescription
@@ -47,7 +48,7 @@ export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit })
                 setLoaded(false);
             }
             else {
-                await axios.put(`http://127.0.0.1:5000/notes/update-note/${cardEdit._id}`,
+                await axios.put(`${baseUrl}notes/update-note/${cardEdit._id}`,
                     {
                         title: newTitle,
                         description: newDescription

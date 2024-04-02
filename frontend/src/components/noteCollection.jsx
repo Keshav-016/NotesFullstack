@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { SweetAlert, SweetAlertError } from './sweetAlert';
 
 export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
-    const baseUrl = 'http://localhost:5000/notes/'
+    const baseUrl = 'https://notesfullstack-7wtx.onrender.com/'
 
     const navigate = useNavigate();
     const [dbData, setdbData] = useState(null);
@@ -13,7 +13,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
     const [isUser, updateIsUser] = useState(false);
     const [selectedMenu, updateSelected] = useState();
     const [selectedCard, updateSelectedCard] = useState([]);
-    const [url, updateUrl] = useState(`${baseUrl}`);
+    const [url, updateUrl] = useState(`${baseUrl}notes/`);
     const [isChange, updateisChange] = useState(false);
     const allItem = useRef(null);
 
@@ -54,7 +54,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
             navigate('/login');
         }
         try {
-            await axios.delete(`${baseUrl}delete-many`,
+            await axios.delete(`${baseUrl}notes/delete-many`,
                 {
                     headers: {
                         "Authorization": `Bearer ${token}`
@@ -89,7 +89,7 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
             navigate('/login');
         }
         try {
-            await axios.post(`${baseUrl}hideNote`,
+            await axios.post(`${baseUrl}notes/hideNote`,
                 {
                     itemIds: selectedCard
                 },
@@ -121,16 +121,16 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
         e.target.style.color = "blue";
         e.target.style.borderColor = "blue";
         if (e.target.innerText === "ALL") {
-            updateUrl(baseUrl);
+            updateUrl(`${baseUrl}notes/`);
         }
         else if (e.target.innerText === "LATEST") {
-            updateUrl(`${baseUrl}latest-notes`);
+            updateUrl(`${baseUrl}notes/latest-notes`);
         }
         else if (e.target.innerText === "HIDDEN") {
-            updateUrl(`${baseUrl}show-hidden`);
+            updateUrl(`${baseUrl}notes/show-hidden`);
         }
         else {
-            updateUrl(`${baseUrl}show-visible`);
+            updateUrl(`${baseUrl}notes/show-visible`);
         }
     }
 
@@ -147,10 +147,10 @@ export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
 
     useEffect(() => {
         if (searchedNote) {
-            updateUrl(`${baseUrl}get-note/?title=${searchedNote}`);
+            updateUrl(`${baseUrl}notes/get-note/?title=${searchedNote}`);
         }
         else{
-            updateUrl(`${baseUrl}`);
+            updateUrl(`${baseUrl}notes/`);
         }
     }, [searchedNote]);
 
