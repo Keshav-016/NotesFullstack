@@ -29,7 +29,7 @@ export async function getNote(req, res, next) {
 export async function updateNote(req, res, next) {
     try {
         const noteId = req.params.id;
-        const existence = await Notes.find({id:noteId , title: req.body.title , description : req.body.description})
+        const existence = await Notes.find({_id:noteId , title: req.body.title , description : req.body.description})
         if (existence.length !==0) {
             throw new Error("Note with same title already exists")
         }
