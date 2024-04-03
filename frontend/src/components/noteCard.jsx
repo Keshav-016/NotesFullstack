@@ -5,7 +5,7 @@ import axios from "axios";
 export default function Card({ title, description, updatedAt, _id , isVisible ,setLoaded, editNote , selectMany , uncheckCard , updateisChange}) {
     const updatedDate = updatedAt.substring(0, 10);
     const updatedTime = updatedAt.substring(11, 19);
-    const baseUrl = 'https://notesfullstack-7wtx.onrender.com/'
+    const baseUrl = 'https://notesfullstack-59iz.onrender.com/'
     async function deleteNote() {
         const storageData = JSON.parse(localStorage.getItem('data'));
         const token = storageData.token;

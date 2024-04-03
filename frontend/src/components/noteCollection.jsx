@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { SweetAlert, SweetAlertError } from './sweetAlert';
 
 export default function Body({ Loaded, setLoaded, editNote, searchedNote }) {
-    const baseUrl = 'https://notesfullstack-7wtx.onrender.com/'
+    const baseUrl = 'https://notesfullstack-59iz.onrender.com/'
 
     const navigate = useNavigate();
     const [dbData, setdbData] = useState(null);

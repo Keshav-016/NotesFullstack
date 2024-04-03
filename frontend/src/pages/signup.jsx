@@ -11,7 +11,7 @@ export default function SignUp() {
     async function registerUser(e) {
         e.preventDefault();
         try {
-            await axios.post("https://notesfullstack-7wtx.onrender.com/users/register", {
+            await axios.post("https://notesfullstack-59iz.onrender.com/users/register", {
                 name: getName.current.value,
                 email: getEmail.current.value,
                 password: getPassword.current.value

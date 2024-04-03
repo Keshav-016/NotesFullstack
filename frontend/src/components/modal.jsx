@@ -22,7 +22,7 @@ export default function AddData({ modalIsOpen, setIsOpen, setLoaded, cardEdit })
     const [newTitle, setNewTitle] = useState("");
     const [newDescription, setNewDescription] = useState("");
     const [editCheck, setEditCheck] = useState(false);
-    const baseUrl = 'https://notesfullstack-7wtx.onrender.com/'
+    const baseUrl = 'https://notesfullstack-59iz.onrender.com/'
     async function addNote() {
         const storageData = JSON.parse(localStorage.getItem('data'));
         const token = storageData?.token;

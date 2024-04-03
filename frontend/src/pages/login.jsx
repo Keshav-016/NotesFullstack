@@ -10,7 +10,7 @@ export default function Login() {
     async function getToken(e) {
         e.preventDefault();
         try {
-            const response = await axios.post("https://notesfullstack-7wtx.onrender.com/users/login", {
+            const response = await axios.post("https://notesfullstack-59iz.onrender.com/users/login", {
                 email: getEmail.current.value,
                 password: getPassword.current.value
             });
