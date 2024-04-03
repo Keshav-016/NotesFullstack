@@ -33,7 +33,7 @@ export async function updateNote(req, res, next) {
             throw new Error("Note with same title already exists")
         }
         const data = await Notes.findByIdAndUpdate(
-            noteId,
+            req.params.id,
             { title: req.body.title, description: req.body.description },
             { returnOriginal: false }
         );
